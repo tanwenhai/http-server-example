@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class HttpInvocationHandler implements InvocationHandler {
         init(method);
         String url = new URLBuilder().origin(host).addPath(path).addPath(subPath).buildString();
 
-        Map<String, Object> uriVariables = null;
+        Map<String, Object> uriVariables = new HashMap<>();
         if (args.length > 0) {
             // 有参数  设置url变量或者查询参数
             Parameter[] parameters = method.getParameters();
