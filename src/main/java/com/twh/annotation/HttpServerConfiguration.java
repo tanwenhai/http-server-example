@@ -6,6 +6,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.EnvironmentAware;
@@ -96,7 +97,7 @@ public class HttpServerConfiguration implements ImportBeanDefinitionRegistrar,
     private void registerBean(AnnotatedBeanDefinition beanDefinition) {
         String beanName = beanDefinition.getBeanClassName();
         Object proxy = createProxy(beanDefinition);
-
+        ((AbstractAutowireCapableBeanFactory)beanFactory).registerSingleton(beanName, proxy);
     }
 
     private Object createProxy(AnnotatedBeanDefinition beanDefinition) {
@@ -106,6 +107,9 @@ public class HttpServerConfiguration implements ImportBeanDefinitionRegistrar,
             AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(target, HttpServer.class);
 
             String path = attributes.getString("path");
+            if (environment.getProperty(path) != null) {
+                path = environment.getProperty(path);
+            }
             String host = attributes.getString("host");
 
             Object proxy = Proxy.newProxyInstance(target.getClassLoader(),

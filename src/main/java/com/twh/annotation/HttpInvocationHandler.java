@@ -18,7 +18,6 @@ public class HttpInvocationHandler implements InvocationHandler {
     private String subPath = "";
     private RequestMethod requestMethod = RequestMethod.POST;
 
-
     public HttpInvocationHandler(String host, String path, RestTemplate restTemplate) {
         this.host = host;
         this.path = path;
